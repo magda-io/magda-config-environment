@@ -97,9 +97,9 @@ tags:
   ingress: true
 
   ## Minions, which listen to changes in the registry and add extra metadata
-  minion-broken-link: true
-  minion-linked-data-rating: true
-  minion-visualization: true
+  # minion-broken-link: true
+  # minion-linked-data-rating: true
+  # minion-visualization: true
   minion-format: true
 
 ## These are the external jobs that pull data in from other data portals. A default is provided here for you.
@@ -227,7 +227,7 @@ ingress:
 ## A pod for proxying to Google Cloud SQL, the GCE managed database service.
 cloud-sql-proxy:
   ## The cloud sql instance to connect to
-  instanceConnectionName: magda-environment:australia-southeast1:prod-db5
+  instanceConnectionName: magda-environment:australia-southeast1:magda-environment-c0-db4
 
 ## A pod that combines all the databases if global.useCombinedDb is set to true
 # combined-db:
@@ -421,3 +421,6 @@ gateway:
 ## Settings for teh visualization minion, which looks at tabular data in order to
 ## determine which columns can be charted.
 # minion-visualization:
+
+content-api:
+  scssVars: '{"AU-color-foreground-action":"#01528B","AU-color-foreground-focus":"#00031f","AU-color-foreground-text":"#00031f","AU-color-background":"#ffffff","AU-colordark-foreground-action":"#f2f2f2","AU-colordark-foreground-focus":"#144475","AU-colordark-foreground-text":"#f2f2f2","AU-colordark-background":"#00031f","header-color-background":"#01528B","header-opacity-desktop-background":"1","header-color-border":"#01528B","header-color-text":"#01528B","header-color-action":"#f2f2f2","header-color-action-background":"transparent","header-color-focus":"#f2f2f2","header-color-focus-background":"#00031f","header-color-mobile-toggle-button-text":"#f2f2f2","header-color-mobile-toggle-button-icon":"#f2f2f2","header-color-mobile-nav-background":"white","header-color-mobile-nav-border-bottom":"#dad9db","header-color-mobile-nav-border-left":"transparent","header-color-mobile-nav-action":"#00031f","header-color-mobile-nav-action-background":"transparent","header-color-mobile-nav-active":"inherit","header-color-mobile-nav-active-background":"#f4f3f5","header-color-mobile-nav-active-border":"#00031f","header-color-mobile-nav-focus":"#f4f3f5","header-color-mobile-nav-focus-background":"#00031f","header-color-mobile-nav-focus-border":"transparent","header-color-mobile-nav-content":"inherit","header-color-mobile-nav-content-background":"transparent","header-color-mobile-nav-content-border-bottom":"#01528B","footer-color-background":"#00031f","footer-color-border":"#00031f","footer-color-text":"#f2f2f2","footer-color-action":"#f2f2f2","footer-color-focus":"#cac8bf"}'
