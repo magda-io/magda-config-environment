@@ -70,12 +70,11 @@ tags:
   ## General services. Note that if you are using combined-db, you need to set both
   ## combined-db and the databases that you are using (e.g. authorization-db) to true.
   ## You can find explanations of what each of these are below
-
   apidocs-server: true
   authorization-api: true
   authorization-db: true
   cloud-sql-proxy: true
-  # combined-db: true
+  combined-db: true
   content-db: true
   content-api: true
   correspondence-api: true
@@ -104,36 +103,6 @@ tags:
 
 ## These are the external jobs that pull data in from other data portals. A default is provided here for you.
 # connectors:
-  ## Whether to run an initial job to crawl all these on install
-  # includeInitialJobs: true
-  #config:
-    #- image:
-    #    name: magda-csv-connector
-    #  id: csv-connector
-    #  name: csv-connector
-    #  sourceUrl: https://content-api/v0/content/csv-connector.bin
-
-  ## Whether to run recurring jobs on the schedule specified per connector.
-  # includeCronJobs: true
-
-  ## They can also have their resource requirements customised individually as per
-  ## https://kubernetes.io/docs/concepts/configuration/manage-compute-resources-container/ like so:
-  # resources:
-    # requests:
-      # cpu: 0m
-      # memory: 0Mi
-    # limits:
-      # cpu: 0m
-      # memory: 0Mi
-
-  ## You can also set image details (except name) for all connectors at this level - this will override
-  ## what's in .global but be overridden by what's in the individual connector config.
-  # image:
-    # tag: vx.x.x
-    # pullPolicy: IfNotPresent
-    # imagePullSecret: ""
-
-
 
 ## Settings for the ingress. You need one of these if you want to do SSL or use the Google CDN on GKE
 ## Otherwise using the built-in Kubernetes LoadBalancer works ok.
@@ -233,7 +202,8 @@ cloud-sql-proxy:
 # combined-db:
 
 ## A pod that controls the content in magda's UI
-# content-api:
+content-api:
+  scssVars: '{"AU-color-foreground-action":"#01528B","AU-color-foreground-focus":"#00031f","AU-color-foreground-text":"#00031f","AU-color-background":"#ffffff","AU-colordark-foreground-action":"#f2f2f2","AU-colordark-foreground-focus":"#144475","AU-colordark-foreground-text":"#f2f2f2","AU-colordark-background":"#00031f","header-color-background":"#01528B","header-opacity-desktop-background":"1","header-color-border":"#01528B","header-color-text":"#01528B","header-color-action":"#f2f2f2","header-color-action-background":"transparent","header-color-focus":"#f2f2f2","header-color-focus-background":"#00031f","header-color-mobile-toggle-button-text":"#f2f2f2","header-color-mobile-toggle-button-icon":"#f2f2f2","header-color-mobile-nav-background":"white","header-color-mobile-nav-border-bottom":"#dad9db","header-color-mobile-nav-border-left":"transparent","header-color-mobile-nav-action":"#00031f","header-color-mobile-nav-action-background":"transparent","header-color-mobile-nav-active":"inherit","header-color-mobile-nav-active-background":"#f4f3f5","header-color-mobile-nav-active-border":"#00031f","header-color-mobile-nav-focus":"#f4f3f5","header-color-mobile-nav-focus-background":"#00031f","header-color-mobile-nav-focus-border":"transparent","header-color-mobile-nav-content":"inherit","header-color-mobile-nav-content-background":"transparent","header-color-mobile-nav-content-border-bottom":"#01528B","footer-color-background":"#00031f","footer-color-border":"#00031f","footer-color-text":"#f2f2f2","footer-color-action":"#f2f2f2","footer-color-focus":"#cac8bf"}'
 
 ## The database behind content-api
 # content-db:
@@ -352,7 +322,10 @@ gateway:
   ## without needing a web pod
   enableAuthEndpoint: true
 
-  ## Turn on HTTP basic authentication
+  ## Redirect HTTP urls to HTTPs urls
+  enableHttpsRedirection: false
+
+  ## Turn on HTTP basic authentication - this uses secrets created by the create-secret script
   enableWebAccessControl: true
 
 ## Configures the service that puts datasets and organisations into elasticsearch
@@ -393,9 +366,6 @@ gateway:
 
 ## The server used for serving the web application to users.
 web-server:
-  gapiIds:
-    - "UA-92539508-4"
-
   ## Autoscaler settings - the min and max number of pods to use
   # autoscaler:
   #   minReplicas: 2
@@ -408,6 +378,13 @@ web-server:
   ## If you're replacing an existing system, you can set its url here to display a
   ## banner allowing people to go back if they don't like the new system.
   # fallbackUrl: "https://data.gov.au"
+
+  # Google Analytics Ids to collect analytics data from the frontend
+  gapiIds:
+    - "UA-92539508-4"
+
+  ## The search score after which to show a "suggest a dataset" form
+  # datasetSearchSuggestionScoreThreshold: 65
 
 ## Settings for the broken link minion, which crawls URLs of distributions in order
 ## to determine whether they're still available.
@@ -425,5 +402,6 @@ web-server:
 ## determine which columns can be charted.
 # minion-visualization:
 
-content-api:
-  scssVars: '{"AU-color-foreground-action":"#01528B","AU-color-foreground-focus":"#00031f","AU-color-foreground-text":"#00031f","AU-color-background":"#ffffff","AU-colordark-foreground-action":"#f2f2f2","AU-colordark-foreground-focus":"#144475","AU-colordark-foreground-text":"#f2f2f2","AU-colordark-background":"#00031f","header-color-background":"#01528B","header-opacity-desktop-background":"1","header-color-border":"#01528B","header-color-text":"#01528B","header-color-action":"#f2f2f2","header-color-action-background":"transparent","header-color-focus":"#f2f2f2","header-color-focus-background":"#00031f","header-color-mobile-toggle-button-text":"#f2f2f2","header-color-mobile-toggle-button-icon":"#f2f2f2","header-color-mobile-nav-background":"white","header-color-mobile-nav-border-bottom":"#dad9db","header-color-mobile-nav-border-left":"transparent","header-color-mobile-nav-action":"#00031f","header-color-mobile-nav-action-background":"transparent","header-color-mobile-nav-active":"inherit","header-color-mobile-nav-active-background":"#f4f3f5","header-color-mobile-nav-active-border":"#00031f","header-color-mobile-nav-focus":"#f4f3f5","header-color-mobile-nav-focus-background":"#00031f","header-color-mobile-nav-focus-border":"transparent","header-color-mobile-nav-content":"inherit","header-color-mobile-nav-content-background":"transparent","header-color-mobile-nav-content-border-bottom":"#01528B","footer-color-background":"#00031f","footer-color-border":"#00031f","footer-color-text":"#f2f2f2","footer-color-action":"#f2f2f2","footer-color-focus":"#cac8bf"}'
+# Settings for the admin API, which allows for changes to be made to the magda
+# installation at runtime... e.g. creating new connector jobs
+# admin-api:
