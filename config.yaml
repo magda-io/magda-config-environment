@@ -102,7 +102,8 @@ tags:
   minion-format: true
 
 ## These are the external jobs that pull data in from other data portals. A default is provided here for you.
-# connectors:
+connectors:
+  config: []
 
 ## Settings for the ingress. You need one of these if you want to do SSL or use the Google CDN on GKE
 ## Otherwise using the built-in Kubernetes LoadBalancer works ok.
@@ -110,7 +111,7 @@ ingress:
   ## The hostname of the site
   hostname: environment.magda.io
   ## The name of the external ip to use - used when using the GCE ingress type
-  ipName: prod
+  ipName: magda-environment-c0-ip
   ## The class of the ingress - if running on GKE, gce will automatically work, otherwise you
   ## can use "nginx" which requires extra setup
   ingressClass: gce
@@ -254,10 +255,10 @@ gateway:
   service:
     ## The type of kubernetes service to use for the gateway - set to LoadBalancer to
     ## expose an external IP, or leave blank if using an ingress
-    # type: LoadBalancer
+    type: NodePort
 
     ## If using a LoadBalancer, the IP to try to use. Leave unset to get an automatic one
-    # loadBalancerIP:
+    # loadBalancerIP: 
 
   ## If replacing a CKAN installation with Magda, this will redirect CKAN paths without
   ## direct magda equivalents (e.g. the API) to a ckan installation at this domain
