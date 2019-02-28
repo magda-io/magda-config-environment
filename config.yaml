@@ -114,6 +114,12 @@ connectors:
       sourceUrl: http://www.environment.gov.au/fed/csw
       pageSize: 100
       schedule: 30 13 */3 * *
+      presetRecordAspects:
+        - id: "dcat-dataset-strings"
+          recordType: "dataset"
+          data:
+            creation:
+              isOpenData: true
 
 ## Settings for the ingress. You need one of these if you want to do SSL or use the Google CDN on GKE
 ## Otherwise using the built-in Kubernetes LoadBalancer works ok.
