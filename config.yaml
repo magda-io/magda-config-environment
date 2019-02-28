@@ -270,6 +270,7 @@ gateway:
     ## If using a LoadBalancer, the IP to try to use. Leave unset to get an automatic one
     # loadBalancerIP: 
   auth:
+    googleClientId: 952048815547-bjats73bll5adjbfvh06q88hm29766nv.apps.googleusercontent.com
     ckanAuthenticationUrl: https://data.gov.au/data
 
   image:
