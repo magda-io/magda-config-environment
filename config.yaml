@@ -88,6 +88,7 @@ tags:
   session-db: true
   web-server: true
   connectors: true
+  opa: true
   admin-api: true
 
   ## Whether to use an ingress, which is necessary for HTTPS and using the Google CDN with
@@ -272,9 +273,6 @@ gateway:
   auth:
     ckanAuthenticationUrl: https://data.gov.au/data
 
-  image:
-    tag: ckan-url-fix
-
   ## If replacing a CKAN installation with Magda, this will redirect CKAN paths without
   ## direct magda equivalents (e.g. the API) to a ckan installation at this domain
   # ckanRedirectionDomain: "example.com"
@@ -401,6 +399,10 @@ web-server:
 
   ## The search score after which to show a "suggest a dataset" form
   # datasetSearchSuggestionScoreThreshold: 65
+
+  featureFlags:
+    cataloguing: true
+
 
 ## Settings for the broken link minion, which crawls URLs of distributions in order
 ## to determine whether they're still available.
