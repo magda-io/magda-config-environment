@@ -426,6 +426,9 @@ web-server:
 
   featureFlags:
     cataloguing: true
+    
+  ## The id of the organization to display by default in the Add Dataset flow.
+  defaultOrganizationId: "org-environment-Australian Government Department of the Environment and Energy"
 
 
 ## Settings for the broken link minion, which crawls URLs of distributions in order
