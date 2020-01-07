@@ -67,6 +67,9 @@ global:
   ## namespaces. Make sure that the priorities tag is true if you turn this on.
   # enablePriorityClass: true
 
+  ## Whether to enable multi-tenancy (pre-alpha)
+  # enableMultiTenants: false
+
 ## Tags allow for services to be turned on and off on the fly... e.g. if you don't need
 ## to send emails, turn the correspondence-api off
 tags:
@@ -103,13 +106,17 @@ tags:
   ingress: true
 
   ## Priority classes - see explanation under "enablePriorityClasses" above
-  # priorities: true
+  priorities: true
 
   ## Minions, which listen to changes in the registry and add extra metadata
   minion-broken-link: false
   minion-linked-data-rating: true
   minion-visualization: true
   minion-format: true
+
+  ## Tenant api / db (pre-alpha)
+  tenant-api: false
+  tenant-db: false
 
 ## These are the external jobs that pull data in from other data portals. A default is provided here for you.
 connectors:
@@ -230,6 +237,9 @@ cloud-sql-proxy:
 
 ## A pod that controls the content in magda's UI
 content-api:
+  ## Override the SCSS variables used by Magda's SCSS files. Look at the "_variables.scss"
+  ## file in the magda code for details. Most customisation can be performed by setting
+  ## magda-color-primary and magda-color-secondary
   scssVars: '{"magda-color-primary": "#02538c", "magda-color-secondary": "#6787bb", "AU-color-foreground-action":"#01528B","AU-color-foreground-focus":"#00031f","AU-color-foreground-text":"#00031f","AU-color-background":"#ffffff","AU-colordark-foreground-action":"#f2f2f2","AU-colordark-foreground-focus":"#144475","AU-colordark-foreground-text":"#f2f2f2","AU-colordark-background":"#02538C","header-color-background":"#6787BB","header-opacity-desktop-background":"1","header-color-border":"#6787BB","header-color-text":"#6787BB","header-color-action":"#f2f2f2","header-color-action-background":"transparent","header-color-focus":"#f2f2f2","header-color-focus-background":"#02538C","header-color-mobile-toggle-button-text":"#f2f2f2","header-color-mobile-toggle-button-icon":"#f2f2f2","header-color-mobile-nav-background":"white","header-color-mobile-nav-border-bottom":"#dad9db","header-color-mobile-nav-border-left":"transparent","header-color-mobile-nav-action":"#02538C","header-color-mobile-nav-action-background":"transparent","header-color-mobile-nav-active":"inherit","header-color-mobile-nav-active-background":"#f4f3f5","header-color-mobile-nav-active-border":"#02538C","header-color-mobile-nav-focus":"#f4f3f5","header-color-mobile-nav-focus-background":"#02538C","header-color-mobile-nav-focus-border":"transparent","header-color-mobile-nav-content":"inherit","header-color-mobile-nav-content-background":"transparent","header-color-mobile-nav-content-border-bottom":"#6787BB","footer-color-background":"#02538C","footer-color-border":"#02538C","footer-color-text":"#f2f2f2","footer-color-action":"#f2f2f2","footer-color-focus":"#cac8bf"}'
 
 ## The database behind content-api
@@ -356,7 +366,8 @@ gateway:
     credentials: true
     origin: true
 
-  ## Enables a simple form at /auth that allows you to test login and logout functionality
+  ## Enables authorization, include a list of authorization options at /auth/providers
+  ## and a simple form at /auth that allows you to test login and logout functionality
   ## without needing a web pod
   enableAuthEndpoint: true
 
@@ -386,11 +397,35 @@ gateway:
   ## Log level to use
   # logLevel: INFO
 
+  ## Stops checking for authorization on methods that change the state of the registry.
+  ## Useful when running locally - DO NOT TURN ON IN PRODUCTION
+  # skipAuthorization: false
+
   ## Configures the liveness probe that checks if the registry is still alive. This
   ## is configurable seperately because currently the registry api has a tendency to
   ## slow down over time, and needs to be restarted when this occurs.
   # livenessProbe:
     # timeoutSeconds: 10
+
+  ## The registry api is able to be split into two kinds of deployments: full, which does everything
+  ## but can only ever run one pod at a time, and read-only, which can only do read-only requests but
+  ## is stateless and can be horizontally scaled
+  # deployments:
+    # full:
+      ## Resources for the full deployment, as per other resource declarations
+      # resources:
+
+    # readOnly:
+      ## Whether to enable the read-only deployment - if not all traffic will go to the full deployment,
+      ## otherwise traffic through /api/v0/registry will come here and only traffic to /api/v0/registry-auth
+      ## will go to the full deployment
+      # enable: true
+      
+      ## Number of replicas
+      # replicas: 2
+
+      ## Resources for the full deployment, as per other resource declarations
+      # resources:
 
 ## Configures the registry database, if a separate one is being used.
 # registry-db:
