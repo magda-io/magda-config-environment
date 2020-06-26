@@ -101,6 +101,11 @@ global:
   ## Whether to enable multi-tenancy (pre-alpha)
   # enableMultiTenants: false
 
+  ## These are the external jobs that pull data in from other data portals. A default is provided here for you.
+  connectors:
+    includeInitialJobs: true
+    includeCronJobs: false
+
 ## Tags allow for services to be turned on and off on the fly... e.g. if you don't need
 ## to send emails, turn the correspondence-api off
 tags:
@@ -127,7 +132,7 @@ tags:
   search-api: true
   session-db: true
   web-server: true
-  connectors: true
+  connectors: false
   opa: true
   admin-api: true
 
@@ -158,26 +163,9 @@ tags:
   ## openfaas is used to manage & run serverless workload
   openfaas: true
 
-## These are the external jobs that pull data in from other data portals. A default is provided here for you.
-connectors:
-  includeInitialJobs: false
-  includeCronJobs: true
-  
-  config:
-    - image:
-        name: magda-csw-connector
-      id: environment
-      name: Department of the Environment and Energy
-      sourceUrl: http://www.environment.gov.au/fed/csw
-      pageSize: 100
-      schedule: 30 13 */3 * *
-      presetRecordAspects:
-        - id: "dcat-dataset-strings"
-          recordType: "dataset"
-          data:
-            creation:
-              isOpenData: true
+  connector-dga: true
 
+  
 # All core components are configurable under magda-core instead
 # connectors & minions are not core components anymore
 magda-core:
@@ -421,6 +409,9 @@ magda-core:
     ## Turn on HTTP basic authentication - this uses secrets created by the create-secret script
     enableWebAccessControl: true
 
+    ## No caching by default
+    defaultCacheControl: ""
+
   ## Configures the service that puts datasets and organisations into elasticsearch
   # indexer:
     # elasticsearch:
@@ -507,27 +498,39 @@ magda-core:
 
     featureFlags:
       cataloguing: true
-      previewAddDataset: true
+      previewAddDataset: false
+      datasetApprovalWorkflowOn: false
+      publishToDga: false
       
     ## The id of the organization to display by default in the Add Dataset flow.
-    defaultOrganizationId: "org-environment-Australian Government Department of the Environment and Energy"
+    defaultOrganizationId: "org-soe-c416b1b6-1ea1-47c3-b44a-b4586bee6e58"
 
-## Settings for the broken link minion, which crawls URLs of distributions in order
-## to determine whether they're still available.
-# minion-broken-link:
+  ## Settings for the broken link minion, which crawls URLs of distributions in order
+  ## to determine whether they're still available.
+  # minion-broken-link:
 
-## Settings for the format minion, which tries to determine the true format of a
-## distribution based on a number of criteria.
-# minion-format:
+  ## Settings for the format minion, which tries to determine the true format of a
+  ## distribution based on a number of criteria.
+  # minion-format:
 
-## Settings for the linked data rating minion, which determines a rating for a dataset
-## based off the availability, license and format of a dataset
-# minion-linked-data-rating:
+  ## Settings for the linked data rating minion, which determines a rating for a dataset
+  ## based off the availability, license and format of a dataset
+  # minion-linked-data-rating:
 
-## Settings for teh visualization minion, which looks at tabular data in order to
-## determine which columns can be charted.
-# minion-visualization:
+  ## Settings for teh visualization minion, which looks at tabular data in order to
+  ## determine which columns can be charted.
+  # minion-visualization:
 
-# Settings for the admin API, which allows for changes to be made to the magda
-# installation at runtime... e.g. creating new connector jobs
-# admin-api:
+  # Settings for the admin API, which allows for changes to be made to the magda
+  # installation at runtime... e.g. creating new connector jobs
+  # admin-api:
+
+connector-dga:
+  config:
+    id: soe
+    name: "data.gov.au - SoE"
+    sourceUrl: https://data.gov.au/data/
+    pageSize: 1000
+    schedule: 0 * * * *
+    allowedOrganisationNames: 
+      - state-of-the-environment

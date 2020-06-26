@@ -61,7 +61,7 @@ helm repo add magda-io https://charts.magda.io
 
 7. Install magda
 ```bash
-helm upgrade magda magda-io/magda --wait --timeout 30000 --install -f config.yaml
+helm upgrade magda magda-io/magda --wait --timeout 30000s --install -f config.yaml
 ```
 
 This will take a while for it to get everything set up. If you want to watch progress, run `kubectl get pods -w` in another terminal.
